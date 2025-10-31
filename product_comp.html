@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus | Premium Tech Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./style_comp.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <i class="fas fa-atom"></i>
+                <span>NEXUS</span>
+            </div>
+            <div class="nav-actions">
+                <button class="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </button>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </nav>
+        
+        <div class="hero-section">
+            <h1 class="hero-title">Future Tech Collection</h1>
+            <p class="hero-subtitle">Experience innovation with our premium technology products</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">2K+</span>
+                    <span class="stat-label">Happy Customers</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">4.9</span>
+                    <span class="stat-label">Average Rating</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Support</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">All Products</button>
+            <button class="filter-btn" data-filter="audio">Audio</button>
+            <button class="filter-btn" data-filter="wearable">Wearables</button>
+            <button class="filter-btn" data-filter="accessory">Accessories</button>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search products..." class="search-input">
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Products Grid -->
+    <main class="main-container">
+        <div class="products-grid" id="productsGrid">
+            <!-- Product cards will be populated here -->
+        </div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" id="closeCart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be populated here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total: $<span id="cartTotal">0.00</span></span>
+            </div>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Loading Animation -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+        // Product Data
+        const products = [
+            {
+                id: 1,
+                name: "Quantum Wireless Earbuds",
+                category: "audio",
+                price: 199.99,
+                oldPrice: 249.99,
+                image: "https://zerolifestyle.co/cdn/shop/files/Zero_Quantum_Green_01_1.webp?v=1720007567&width=1200",
+                description: "Premium noise-canceling earbuds with 30hr battery life and spatial audio.",
+                features: ["Noise Canceling", "30hr Battery", "Spatial Audio", "Wireless Charging"],
+                badge: "BEST SELLER"
+            },
+            {
+                id: 2,
+                name: "Nexus Smart Watch Pro",
+                category: "wearable",
+                price: 349.99,
+                oldPrice: 399.99,
+                image: "https://images.unsplash.com/photo-1551816230-ef5deaed4a26?w=400&h=400&fit=crop",
+                description: "Advanced health monitoring with always-on display and premium materials.",
+                features: ["ECG Monitor", "Always-on Display", "5ATM Waterproof", "30-day Battery"],
+                badge: "NEW"
+            },
+            {
+                id: 3,
+                name: "HyperX Gaming Headset",
+                category: "audio",
+                price: 159.99,
+                oldPrice: null,
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvy_u23wUP6OqLWupTVWaXvpID6aU45NZOPA&s",
+                description: "Professional gaming headset with 7.1 surround sound and RGB lighting.",
+                features: ["7.1 Surround", "RGB Lighting", "Noise Canceling Mic", "Memory Foam"],
+                badge: null
+            },
+            {
+                id: 4,
+                name: "Solar Power Bank 20K",
+                category: "accessory",
+                price: 79.99,
+                oldPrice: 99.99,
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhQzuNwUoiE3V6v3dIU-lyXmG043l9kzFTdQ&s",
+                description: "High-capacity power bank with solar charging and wireless output.",
+                features: ["20,000mAh", "Solar Charging", "Wireless Output", "Fast Charge"],
+                badge: "ECO"
+            },
+            {
+                id: 5,
+                name: "Zenith Fitness Tracker",
+                category: "wearable",
+                price: 129.99,
+                oldPrice: 149.99,
+                image: "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=400&h=400&fit=crop",
+                description: "Comprehensive health tracking with stress monitoring and sleep analysis.",
+                features: ["Stress Monitor", "Sleep Analysis", "SpO2 Tracking", "14-day Battery"],
+                badge: "SALE"
+            },
+            {
+                id: 6,
+                name: "Thunder Bluetooth Speaker",
+                category: "audio",
+                price: 119.99,
+                oldPrice: null,
+                image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop",
+                description: "360° immersive sound with party mode and waterproof design.",
+                features: ["360° Sound", "IP67 Waterproof", "Party Mode", "24hr Battery"],
+                badge: "POPULAR"
+            }
+        ];
+
+        // DOM Elements
+        const productsGrid = document.getElementById('productsGrid');
+        const cartSidebar = document.getElementById('cartSidebar');
+        const closeCart = document.getElementById('closeCart');
+        const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
+        const cartCount = document.querySelector('.cart-count');
+        const themeToggle = document.getElementById('themeToggle');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const searchInput = document.querySelector('.search-input');
+        const cartBtn = document.querySelector('.cart-btn');
+        const toast = document.getElementById('toast');
+        const loading = document.getElementById('loading');
+
+        // State
+        let cart = [];
+        let currentFilter = 'all';
+        let currentSearch = '';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            renderProducts();
+            setupEventListeners();
+            simulateLoading();
+        }
+
+        function simulateLoading() {
+            setTimeout(() => {
+                loading.classList.add('hidden');
+            }, 1500);
+        }
+
+        function setupEventListeners() {
+            // Cart functionality
+            cartBtn.addEventListener('click', toggleCart);
+            closeCart.addEventListener('click', toggleCart);
+            
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // Filter buttons
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    renderProducts();
+                });
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('input', (e) => {
+                currentSearch = e.target.value.toLowerCase();
+                renderProducts();
+            });
+            
+            // Close cart when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!cartSidebar.contains(e.target) && !cartBtn.contains(e.target)) {
+                    cartSidebar.classList.remove('open');
+                }
+            });
+        }
+
+        function renderProducts() {
+            const filteredProducts = products.filter(product => {
+                const matchesFilter = currentFilter === 'all' || product.category === currentFilter;
+                const matchesSearch = product.name.toLowerCase().includes(currentSearch) ||
+                                    product.description.toLowerCase().includes(currentSearch);
+                return matchesFilter && matchesSearch;
+            });
+
+            productsGrid.innerHTML = filteredProducts.map(product => `
+                <div class="product-card" data-category="${product.category}">
+                    ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ''}
+                    <div class="product-image-container">
+                        <img src="${product.image}" alt="${product.name}" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <span class="product-category">${product.category}</span>
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-features">
+                            ${product.features.map(feature => `<span class="feature-tag">${feature}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="product-footer">
+                        <div class="product-price">
+                            $${product.price}
+                            ${product.oldPrice ? `<span class="price-old">$${product.oldPrice}</span>` : ''}
+                        </div>
+                        <button class="add-to-cart" onclick="addToCart(${product.id})">
+                            <i class="fas fa-shopping-cart"></i>
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleCart() {
+            cartSidebar.classList.toggle('open');
+            renderCartItems();
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            themeToggle.innerHTML = newTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            
+            // Save theme preference
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1
+                });
+            }
+            
+            updateCartUI();
+            showToast(`${product.name} added to cart!`);
+            
+            // Add animation to button
+            const button = event.target.closest('.add-to-cart');
+            button.classList.add('added');
+            setTimeout(() => button.classList.remove('added'), 2000);
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartUI();
+            showToast('Item removed from cart');
+        }
+
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            cartCount.textContent = totalItems;
+            cartTotal.textContent = totalPrice.toFixed(2);
+            
+            if (cartSidebar.classList.contains('open')) {
+                renderCartItems();
+            }
+        }
+
+        function renderCartItems() {
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                        <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <p>Your cart is empty</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">$${item.price} x ${item.quantity}</div>
+                    </div>
+                    <button class="cart-item-remove" onclick="removeFromCart(${item.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeToggle.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+
+        // Add some interactive animations
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // Make functions available globally
+        window.addToCart = addToCart;
+        window.removeFromCart = removeFromCart;
+    </script>
+    <footer> 
+        &copy; 2025 Gazelle Pearson | Product Exercise 
+    </footer>
+</body>
+</html>
